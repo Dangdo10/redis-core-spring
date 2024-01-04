@@ -9,6 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.AbstractMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/redis")
@@ -34,6 +35,9 @@ public class DevelopController {
     @ResponseStatus(HttpStatus.CREATED)
     public String setString(@RequestBody Student student) {
         template.opsForValue().set(STRING_BEARS + student.getName(), TOKEN);
+
+        // Đặt thời gian sống cho khóa (10 giây)
+        template.expire(STRING_BEARS + student.getName(), 60, TimeUnit.SECONDS);
         return student.getName();
     }
 
